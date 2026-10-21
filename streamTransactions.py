@@ -54,22 +54,29 @@ def stream_transactions(conn, account_id, amount, txn_type):
             else:
                 raise ValueError("Invalid transaction type")
 
+ 
+
+
         
 def main():
-    with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
-
-                print("Creating transaction...", flush=True)
-                stream_transactions(
-                    conn=conn,
-                    account_id= 5300000002,
-                    # amount=round(random.uniform(50.00, 10_000.00), 2),
-                    amount=50000,
-                    txn_type='DEBIT'
-                )
+    try:
+        with psycopg.connect(**DB_CONFIG, row_factory=dict_row) as conn:
+            i=1000
+            while True:
                 
-                
+                    print(f"CREATING TRANSACTION {i}", flush=True)
+                    i+=1
+                    stream_transactions(
+                        conn=conn,
+                        account_id=random.randint(5300000001, 5300241146),
+                        amount=round(random.uniform(50.00, 780.00), 2),
+                        txn_type=random.choice(['DEBIT', 'CREDIT'])
+                    )
+                    time.sleep(round(random.uniform(0.1, 4.7), 2))
+                    
+    except KeyboardInterrupt as e:
+        print("\n\nSUCCESSFULLY INTERRUPTED BY THE USER")
 
-    
 
 if __name__ == "__main__":
     main()
